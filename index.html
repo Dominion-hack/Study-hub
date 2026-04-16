@@ -110,22 +110,99 @@ function show(id) {
     document.getElementById(id).classList.add("active");
 }
 
+// DATA (YOUR CONTENT CONTROL CENTER)
+const data = {
+    "10": {
+        subjects: {
+            "Mathematics": {
+                scheme: "Algebra, Fractions, Indices, Linear Equations",
+                lesson: `
+<h3>🔢 Algebraic Fractions</h3>
+<p><b>Meaning:</b> Fractions with algebraic expressions.</p>
+
+<p><b>Rules:</b></p>
+<ul>
+<li>Denominator must not be zero</li>
+<li>Always factor before simplifying</li>
+</ul>
+
+<p><b>Example:</b></p>
+<p>Simplify: (x² - 9)/(x - 3)</p>
+<p>Factor → (x-3)(x+3)/(x-3)</p>
+<p>Answer → x + 3 ✅</p>
+
+<p><b>Tips:</b></p>
+<ul>
+<li>Use LCM for addition</li>
+<li>Flip when dividing</li>
+</ul>
+`
+            },
+            "Biology": {
+                scheme: "Cells, Nutrition, Respiration",
+                lesson: `
+<h3>🧬 Cell Structure</h3>
+<p>The cell is the basic unit of life.</p>
+
+<ul>
+<li>Nucleus → controls activities</li>
+<li>Cytoplasm → where reactions happen</li>
+<li>Cell membrane → controls entry</li>
+</ul>
+`
+            }
+        }
+    },
+
+    "11": {
+        subjects: {
+            "Physics": {
+                scheme: "Motion, Force, Energy",
+                lesson: `
+<h3>⚡ Motion</h3>
+<p>Motion is change in position over time.</p>
+
+<p><b>Formula:</b></p>
+<p>Speed = Distance / Time</p>
+
+<p><b>Types:</b></p>
+<ul>
+<li>Uniform motion</li>
+<li>Accelerated motion</li>
+</ul>
+`
+            },
+            "Chemistry": {
+                scheme: "Atoms, Bonding, Periodic Table",
+                lesson: `
+<h3>🧪 Atomic Structure</h3>
+<p>Atoms are the smallest units of matter.</p>
+
+<ul>
+<li>Protons → positive</li>
+<li>Electrons → negative</li>
+<li>Neutrons → neutral</li>
+</ul>
+`
+            }
+        }
+    }
+};
+
 // SELECT GRADE
 function enterGrade(g) {
     grade = g;
 
     document.getElementById("gradeTitle").innerText = "Grade " + g;
     document.getElementById("timetableText").innerText =
-        "This is timetable for Grade " + g + " (edit it)";
+        "Timetable for Grade " + g + " (edit this)";
 
     show("timetable");
 }
 
 // GO SUBJECTS
 function goSubjects() {
-    let subjects = (grade === "10")
-        ? ["Math", "Biology", "English"]
-        : ["Physics", "Chemistry", "Economics"];
+    let subjects = Object.keys(data[grade].subjects);
 
     let container = document.getElementById("subjectList");
     container.innerHTML = "";
@@ -150,7 +227,7 @@ function selectSubject(sub) {
 
     document.getElementById("schemeTitle").innerText = sub;
     document.getElementById("schemeText").innerText =
-        sub + "https://lessonplan.edudelight.com/third-term-scheme-of-work-for-physics-ss2-2/";
+        data[grade].subjects[sub].scheme;
 
     show("scheme");
 }
@@ -161,59 +238,8 @@ function startLesson() {
     canExit = false;
 
     document.getElementById("lessonTitle").innerText = subject;
-    document.getElementById("lessonContent").innerText =
-        subject + "🔢 TOPIC 1: ALGEBRAIC FRACTIONS (RATIONAL EXPRESSIONS)
-🧠 1. Meaning of Algebraic Fractions
-An algebraic fraction is a fraction where the numerator and/or denominator contains algebraic expressions.
-Examples:
-📌 2. Conditions for Algebraic Fractions
-👉 Denominator must NOT be zero.
-Example:
-✏️ 3. Simplifying Algebraic Fractions
-Method:
-Factorize numerator and denominator
-Cancel common factors
-Example 1:
-Simplify:
-Step 1: Factorize
-Step 2: Cancel
-✔ Final answer: x − 3
-🔄 4. Multiplication of Algebraic Fractions
-Rule:
-Multiply straight across:
-Example:
-Step:
-✔ Final answer: 2
-➗ 5. Division of Algebraic Fractions
-Rule:
-👉 Change division to multiplication and flip the second fraction.
-Example:
-Step:
-✔ Final answer: x²/6
-➕ 6. Addition of Algebraic Fractions
-Rule:
-Find LCM of denominators
-Example:
-LCM = 2x
-✔ Final answer: (x + 2) / 2x
-➖ 7. Subtraction of Algebraic Fractions
-Example:
-LCM = 2x
-✔ Final answer: (6 − x)/2x
-🔥 8. Simplifying Complex Fractions
-Example:
-Step:
-✔ Final answer: (x + y)/xy
-⚠️ 9. Common Mistakes
-❌ Not factorizing before cancelling
-❌ Forgetting LCM in addition/subtraction
-❌ Cancelling terms wrongly (only factors cancel!)
-❌ Not flipping second fraction in division
-🎯 10. Exam Tips
-Always factor first ✍️
-Use LCM for addition/subtraction
-Change ÷ to × and flip
-Show all working (WAEC loves steps 😄)";
+    document.getElementById("lessonContent").innerHTML =
+        data[grade].subjects[subject].lesson;
 
     show("lesson");
     startTimer();
