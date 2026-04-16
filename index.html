@@ -2,8 +2,6 @@
 <html>
 <head>
     <title>Study Hub 📚</title>
-
-    <!-- IMPORTANT FIX -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
@@ -27,7 +25,6 @@
 
         h1 {
             text-align: center;
-            font-size: 28px;
         }
 
         .card {
@@ -51,13 +48,8 @@
             border: none;
             font-size: 16px;
             font-weight: bold;
-            cursor: pointer;
             border-radius: 8px;
-        }
-
-        p {
-            font-size: 18px;
-            line-height: 1.6;
+            cursor: pointer;
         }
 
         #timer {
@@ -67,54 +59,44 @@
         }
     </style>
 </head>
-‎
-‎<body>
-‎
-‎<!-- HOME -->
-‎<div id="home" class="screen active">
-‎    <h1>📚 Study Hub</h1>
-‎
-‎    <div class="card" onclick="enterGrade('10')">🔼 Grade 10</div>
-‎    <div class="card" onclick="enterGrade('11')">🔽 Grade 11</div>
-‎</div>
-‎
-‎<!-- TIMETABLE -->
-‎<div id="timetable" class="screen">
-‎    <h1 id="gradeTitle"></h1>
-‎
-‎    <h2>🕒 Timetable</h2>
-‎    <p id="timetableText"></p>
-‎
-‎    <button onclick="goSubjects()">Continue</button>
-‎</div>
-‎
-‎<!-- SUBJECTS -->
-‎<div id="subjects" class="screen">
-‎    <h1 id="subjectTitle"></h1>
-‎
-‎    <div id="subjectList"></div>
-‎</div>
-‎
-‎<!-- SCHEME -->
-‎<div id="scheme" class="screen">
-‎    <h1 id="schemeTitle"></h1>
-‎
-‎    <p id="schemeText"></p>
-‎
-‎    <button onclick="startLesson()">Continue</button>
-‎</div>
-‎
-‎<!-- LESSON -->
-‎<div id="lesson" class="screen">
-‎    <h1 id="lessonTitle"></h1>
-‎
-‎    <p id="lessonContent"></p>
-‎
-‎    <h2 id="timer">⏱ 60:00</h2>
-‎
-‎    <button onclick="tryExit()">Exit</button>
-‎</div>
-‎
+
+<body>
+
+<!-- HOME -->
+<div id="home" class="screen active">
+    <h1>📚 Study Hub</h1>
+    <div class="card" onclick="enterGrade('10')">🔼 Grade 10</div>
+    <div class="card" onclick="enterGrade('11')">🔽 Grade 11</div>
+</div>
+
+<!-- TIMETABLE -->
+<div id="timetable" class="screen">
+    <h1 id="gradeTitle"></h1>
+    <p id="timetableText"></p>
+    <button onclick="goSubjects()">Continue</button>
+</div>
+
+<!-- SUBJECTS -->
+<div id="subjects" class="screen">
+    <h1 id="subjectTitle"></h1>
+    <div id="subjectList"></div>
+</div>
+
+<!-- SCHEME -->
+<div id="scheme" class="screen">
+    <h1 id="schemeTitle"></h1>
+    <p id="schemeText"></p>
+    <button onclick="startLesson()">Continue</button>
+</div>
+
+<!-- LESSON -->
+<div id="lesson" class="screen">
+    <h1 id="lessonTitle"></h1>
+    <p id="lessonContent"></p>
+    <h2 id="timer">⏱ 60:00</h2>
+    <button onclick="tryExit()">Exit</button>
+</div>
+
 <script>
 let grade = "";
 let subject = "";
@@ -122,56 +104,53 @@ let timeLeft = 3600;
 let timerInterval;
 let canExit = false;
 
-// SCREEN SWITCH
-function show(screen) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById(screen).classList.add('active');
+// SWITCH SCREEN
+function show(id) {
+    document.querySelectorAll(".screen").forEach(el => el.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
 }
 
-// HOME → GRADE
+// SELECT GRADE
 function enterGrade(g) {
     grade = g;
 
     document.getElementById("gradeTitle").innerText = "Grade " + g;
-
-    let timetable = (g === "10")
-        ? "Grade 10 Timetable (edit this)"
-        : "Grade 11 Timetable (edit this)";
-
-    document.getElementById("timetableText").innerText = timetable;
+    document.getElementById("timetableText").innerText =
+        "This is timetable for Grade " + g + " (edit it)";
 
     show("timetable");
 }
 
-// TIMETABLE → SUBJECTS
+// GO SUBJECTS
 function goSubjects() {
-    document.getElementById("subjectTitle").innerText = "Grade " + grade;
-
-    let list = document.getElementById("subjectList");
-    list.innerHTML = "";
-
     let subjects = (grade === "10")
         ? ["Math", "Biology", "English"]
         : ["Physics", "Chemistry", "Economics"];
 
-    subjects.forEach(s => {
+    let container = document.getElementById("subjectList");
+    container.innerHTML = "";
+
+    document.getElementById("subjectTitle").innerText =
+        "Grade " + grade + " Subjects";
+
+    subjects.forEach(sub => {
         let div = document.createElement("div");
         div.className = "card";
-        div.innerText = s;
-        div.onclick = () => selectSubject(s);
-        list.appendChild(div);
+        div.innerText = sub;
+        div.onclick = () => selectSubject(sub);
+        container.appendChild(div);
     });
 
     show("subjects");
 }
 
-// SUBJECT → SCHEME
-function selectSubject(s) {
-    subject = s;
+// SELECT SUBJECT
+function selectSubject(sub) {
+    subject = sub;
 
-    document.getElementById("schemeTitle").innerText = s;
+    document.getElementById("schemeTitle").innerText = sub;
     document.getElementById("schemeText").innerText =
-        s + " Scheme of Work (you will edit this)";
+        sub + "https://lessonplan.edudelight.com/third-term-scheme-of-work-for-physics-ss2-2/";
 
     show("scheme");
 }
@@ -182,60 +161,8 @@ function startLesson() {
     canExit = false;
 
     document.getElementById("lessonTitle").innerText = subject;
-
     document.getElementById("lessonContent").innerText =
-        subject + "🔢 TOPIC 1: ALGEBRAIC FRACTIONS (RATIONAL EXPRESSIONS)
-🧠 1. Meaning of Algebraic Fractions
-An algebraic fraction is a fraction where the numerator and/or denominator contains algebraic expressions.
-Examples:
-📌 2. Conditions for Algebraic Fractions
-👉 Denominator must NOT be zero.
-Example:
-✏️ 3. Simplifying Algebraic Fractions
-Method:
-Factorize numerator and denominator
-Cancel common factors
-Example 1:
-Simplify:
-Step 1: Factorize
-Step 2: Cancel
-✔ Final answer: x − 3
-🔄 4. Multiplication of Algebraic Fractions
-Rule:
-Multiply straight across:
-Example:
-Step:
-✔ Final answer: 2
-➗ 5. Division of Algebraic Fractions
-Rule:
-👉 Change division to multiplication and flip the second fraction.
-Example:
-Step:
-✔ Final answer: x²/6
-➕ 6. Addition of Algebraic Fractions
-Rule:
-Find LCM of denominators
-Example:
-LCM = 2x
-✔ Final answer: (x + 2) / 2x
-➖ 7. Subtraction of Algebraic Fractions
-Example:
-LCM = 2x
-✔ Final answer: (6 − x)/2x
-🔥 8. Simplifying Complex Fractions
-Example:
-Step:
-✔ Final answer: (x + y)/xy
-⚠️ 9. Common Mistakes
-❌ Not factorizing before cancelling
-❌ Forgetting LCM in addition/subtraction
-❌ Cancelling terms wrongly (only factors cancel!)
-❌ Not flipping second fraction in division
-🎯 10. Exam Tips
-Always factor first ✍️
-Use LCM for addition/subtraction
-Change ÷ to × and flip
-Show all working (WAEC loves steps 😄)";
+        subject + " lesson content goes here";
 
     show("lesson");
     startTimer();
@@ -257,7 +184,7 @@ function startTimer() {
         if (timeLeft <= 0) {
             clearInterval(timerInterval);
             canExit = true;
-            alert("Lesson completed 🎉");
+            alert("Lesson complete 🎉");
             show("subjects");
         }
     }, 1000);
@@ -266,12 +193,12 @@ function startTimer() {
 // EXIT CONTROL
 function tryExit() {
     if (!canExit) {
-        alert("❌ You must finish the 1 hour lesson!");
+        alert("❌ Finish the 1 hour lesson!");
     } else {
         show("subjects");
     }
 }
 </script>
-‎
-‎</body>
-‎</html>
+
+</body>
+</html>
