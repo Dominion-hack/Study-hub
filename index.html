@@ -115,248 +115,163 @@
 ‎    <button onclick="tryExit()">Exit</button>
 ‎</div>
 ‎
-‎<script>
-‎let grade = "";
-‎let subject = "";
-‎let timeLeft = 3600;
-‎let timerInterval;
-‎let canExit = false;
-‎
-‎// DATA (SEPARATED)
-‎const data = {
-‎    "10": {
-‎        timetable: "YOU WILL FIND YOUR TIMETABLE IN YOUR NOTE BOOK",
-‎        subjects: {
-‎            "Math": {
-‎                scheme: "Grade 10 Math Scheme",
-‎                lesson: "🔢 TOPIC 1: ALGEBRAIC FRACTIONS (RATIONAL EXPRESSIONS)
-‎🧠 1. Meaning of Algebraic Fractions
-‎An algebraic fraction is a fraction where the numerator and/or denominator contains algebraic expressions.
-‎Examples:
-‎📌 2. Conditions for Algebraic Fractions
-‎👉 Denominator must NOT be zero.
-‎Example:
-‎✏️ 3. Simplifying Algebraic Fractions
-‎Method:
-‎Factorize numerator and denominator
-‎Cancel common factors
-‎Example 1:
-‎Simplify:
-‎Step 1: Factorize
-‎Step 2: Cancel
-‎✔ Final answer: x − 3
-‎🔄 4. Multiplication of Algebraic Fractions
-‎Rule:
-‎Multiply straight across:
-‎Example:
-‎Step:
-‎✔ Final answer: 2
-‎➗ 5. Division of Algebraic Fractions
-‎Rule:
-‎👉 Change division to multiplication and flip the second fraction.
-‎Example:
-‎Step:
-‎✔ Final answer: x²/6
-‎➕ 6. Addition of Algebraic Fractions
-‎Rule:
-‎Find LCM of denominators
-‎Example:
-‎LCM = 2x
-‎✔ Final answer: (x + 2) / 2x
-‎➖ 7. Subtraction of Algebraic Fractions
-‎Example:
-‎LCM = 2x
-‎✔ Final answer: (6 − x)/2x
-‎🔥 8. Simplifying Complex Fractions
-‎Example:
-‎Step:
-‎✔ Final answer: (x + y)/xy
-‎⚠️ 9. Common Mistakes
-‎❌ Not factorizing before cancelling
-‎❌ Forgetting LCM in addition/subtraction
-‎❌ Cancelling terms wrongly (only factors cancel!)
-‎❌ Not flipping second fraction in division
-‎🎯 10. Exam Tips
-‎Always factor first ✍️
-‎Use LCM for addition/subtraction
-‎Change ÷ to × and flip
-‎Show all working (WAEC loves steps 😄)"
-‎            },
-‎            "Biology": {
-‎                scheme: "Grade 10 Biology Scheme",
-‎                lesson: "Biology Lesson for Grade 10"
-‎            }
-‎        }
-‎    },
-‎    "11": {
-‎        timetable: "Grade 11 Timetable (edit this)",
-‎        subjects: {
-‎            "MATHEMATICS": {
-‎                scheme: "Grade 11 Physics Scheme",
-‎                lesson: "📘 CIRCLE THEOREMS
-‎🔵 1. What is a Circle?
-‎A circle is a set of all points in a plane that are at a fixed distance from a fixed point called the center.
-‎Fixed distance = radius
-‎Line through center = diameter
-‎Diameter = 2 × radius
-‎🧩 2. Important Parts of a Circle
-‎Radius (r): Center to edge
-‎Diameter (d): Line across circle through center
-‎Chord: Line joining two points on the circle
-‎Arc: Part of the circumference
-‎Sector: Region between two radii
-‎Segment: Region between a chord and arc
-‎Tangent: Line touching the circle at one point
-‎Secant: Line cutting the circle at two points
-‎📐 3. Circle Theorems (VERY IMPORTANT 🔥)
-‎1. Angle at the Center is Twice the Angle at the Circumference
-‎👉 The angle at the center is 2 × angle at the circumference standing on the same arc.
-‎Example:
-‎If angle at circumference = 40°
-‎Then angle at center = 80°
-‎2. Angles in the Same Segment are Equal
-‎👉 Angles subtended by the same chord in the same segment are equal.
-‎3. Angle in a Semicircle is 90°
-‎👉 Any angle formed in a semicircle is a right angle (90°)
-‎4. Opposite Angles of a Cyclic Quadrilateral Sum to 180°
-‎👉 If all four points lie on a circle:
-‎Angle A + Angle C = 180°
-‎Angle B + Angle D = 180°
-‎5. Exterior Angle of a Cyclic Quadrilateral
-‎👉 Exterior angle = opposite interior angle
-‎6. Angle Between Tangent and Radius is 90°
-‎👉 Radius ⟂ Tangent at the point of contact
-‎7. Tangents from the Same Point are Equal
-‎👉 Two tangents drawn from the same external point have equal lengths.
-‎8. Alternate Segment Theorem
-‎👉 Angle between tangent and chord = angle in the opposite segment.
-‎(This one is tricky but very common in exams 😏)
-‎9. Perpendicular from Center to Chord Bisects the Chord
-‎👉 If a line from the center meets a chord at 90°, it cuts the chord into two equal parts.
-‎10. Equal Chords Subtend Equal Angles
-‎👉 Equal chords give equal angles at the center.
-‎📊 4. Key Formulas
-‎Diameter = 2r
-‎Circumference = 2πr
-‎Area = πr²
-‎🧠 5. How to Solve Circle Theorem Questions
-‎Draw the diagram clearly ✍️
-‎Identify known angles
-‎Check which theorem applies
-‎Use step-by-step reasoning
-‎Always state the theorem used (VERY IMPORTANT in exams)
-‎⚠️ Common Mistakes
-‎❌ Forgetting “same arc” condition
-‎❌ Mixing tangent theorem with cyclic quadrilateral
-‎❌ Not labeling diagram properly
-‎❌ Skipping reasons in solutions
-‎🎯 Exam Tips
-‎Memorize all 10 theorems 🔥
-‎Practice diagrams a lot
-‎Look for cyclic quadrilateral clues
-‎Whenever you see a tangent, think of:
-‎90° rule
-‎Alternate segment theorem"
-‎            },
-‎            "Chemistry": {
-‎                scheme: "Grade 11 Chemistry Scheme",
-‎                lesson: "Chemistry Lesson for Grade 11"
-‎            }
-‎        }
-‎    }
-‎};
-‎
-‎// Screen switch
-‎function show(screen) {
-‎    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-‎    document.getElementById(screen).classList.add('active');
-‎}
-‎
-‎// Enter grade
-‎function enterGrade(g) {
-‎    grade = g;
-‎
-‎    document.getElementById("gradeTitle").innerText = "Grade " + g;
-‎    document.getElementById("timetableText").innerText = data[g].timetable;
-‎
-‎    show("timetable");
-‎}
-‎
-‎// Subjects
-‎function goSubjects() {
-‎    document.getElementById("subjectTitle").innerText = "Grade " + grade + " Subjects";
-‎
-‎    let list = document.getElementById("subjectList");
-‎    list.innerHTML = "";
-‎
-‎    let subjects = data[grade].subjects;
-‎
-‎    for (let s in subjects) {
-‎        let div = document.createElement("div");
-‎        div.className = "card";
-‎        div.innerText = s;
-‎        div.onclick = () => selectSubject(s);
-‎        list.appendChild(div);
-‎    }
-‎
-‎    show("subjects");
-‎}
-‎
-‎// Select subject
-‎function selectSubject(s) {
-‎    subject = s;
-‎
-‎    document.getElementById("schemeTitle").innerText = s + " - Scheme";
-‎    document.getElementById("schemeText").innerText = data[grade].subjects[s].scheme;
-‎
-‎    show("scheme");
-‎}
-‎
-‎// Lesson
-‎function startLesson() {
-‎    timeLeft = 3600;
-‎    canExit = false;
-‎
-‎    document.getElementById("lessonTitle").innerText = subject + " Lesson";
-‎    document.getElementById("lessonContent").innerText =
-‎        data[grade].subjects[subject].lesson;
-‎
-‎    show("lesson");
-‎    startTimer();
-‎}
-‎
-‎// Timer
-‎function startTimer() {
-‎    clearInterval(timerInterval);
-‎
-‎    timerInterval = setInterval(() => {
-‎        timeLeft--;
-‎
-‎        let m = Math.floor(timeLeft / 60);
-‎        let s = timeLeft % 60;
-‎
-‎        document.getElementById("timer").innerText =
-‎            "⏱ " + m + ":" + (s < 10 ? "0" : "") + s;
-‎
-‎        if (timeLeft <= 0) {
-‎            clearInterval(timerInterval);
-‎            canExit = true;
-‎            alert("Lesson done 🎉 you can now enjoy your day");
-‎            show("subjects");
-‎        }
-‎
-‎    }, 1000);
-‎}
-‎
-‎// Prevent early exit
-‎function tryExit() {
-‎    if (!canExit) {
-‎        alert("❌ Finish the 1 hour lesson!");
-‎    } else {
-‎        show("subjects");
-‎    }
-‎}
-‎</script>
+<script>
+let grade = "";
+let subject = "";
+let timeLeft = 3600;
+let timerInterval;
+let canExit = false;
+
+// SCREEN SWITCH
+function show(screen) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(screen).classList.add('active');
+}
+
+// HOME → GRADE
+function enterGrade(g) {
+    grade = g;
+
+    document.getElementById("gradeTitle").innerText = "Grade " + g;
+
+    let timetable = (g === "10")
+        ? "Grade 10 Timetable (edit this)"
+        : "Grade 11 Timetable (edit this)";
+
+    document.getElementById("timetableText").innerText = timetable;
+
+    show("timetable");
+}
+
+// TIMETABLE → SUBJECTS
+function goSubjects() {
+    document.getElementById("subjectTitle").innerText = "Grade " + grade;
+
+    let list = document.getElementById("subjectList");
+    list.innerHTML = "";
+
+    let subjects = (grade === "10")
+        ? ["Math", "Biology", "English"]
+        : ["Physics", "Chemistry", "Economics"];
+
+    subjects.forEach(s => {
+        let div = document.createElement("div");
+        div.className = "card";
+        div.innerText = s;
+        div.onclick = () => selectSubject(s);
+        list.appendChild(div);
+    });
+
+    show("subjects");
+}
+
+// SUBJECT → SCHEME
+function selectSubject(s) {
+    subject = s;
+
+    document.getElementById("schemeTitle").innerText = s;
+    document.getElementById("schemeText").innerText =
+        s + " Scheme of Work (you will edit this)";
+
+    show("scheme");
+}
+
+// START LESSON
+function startLesson() {
+    timeLeft = 3600;
+    canExit = false;
+
+    document.getElementById("lessonTitle").innerText = subject;
+
+    document.getElementById("lessonContent").innerText =
+        subject + "🔢 TOPIC 1: ALGEBRAIC FRACTIONS (RATIONAL EXPRESSIONS)
+🧠 1. Meaning of Algebraic Fractions
+An algebraic fraction is a fraction where the numerator and/or denominator contains algebraic expressions.
+Examples:
+📌 2. Conditions for Algebraic Fractions
+👉 Denominator must NOT be zero.
+Example:
+✏️ 3. Simplifying Algebraic Fractions
+Method:
+Factorize numerator and denominator
+Cancel common factors
+Example 1:
+Simplify:
+Step 1: Factorize
+Step 2: Cancel
+✔ Final answer: x − 3
+🔄 4. Multiplication of Algebraic Fractions
+Rule:
+Multiply straight across:
+Example:
+Step:
+✔ Final answer: 2
+➗ 5. Division of Algebraic Fractions
+Rule:
+👉 Change division to multiplication and flip the second fraction.
+Example:
+Step:
+✔ Final answer: x²/6
+➕ 6. Addition of Algebraic Fractions
+Rule:
+Find LCM of denominators
+Example:
+LCM = 2x
+✔ Final answer: (x + 2) / 2x
+➖ 7. Subtraction of Algebraic Fractions
+Example:
+LCM = 2x
+✔ Final answer: (6 − x)/2x
+🔥 8. Simplifying Complex Fractions
+Example:
+Step:
+✔ Final answer: (x + y)/xy
+⚠️ 9. Common Mistakes
+❌ Not factorizing before cancelling
+❌ Forgetting LCM in addition/subtraction
+❌ Cancelling terms wrongly (only factors cancel!)
+❌ Not flipping second fraction in division
+🎯 10. Exam Tips
+Always factor first ✍️
+Use LCM for addition/subtraction
+Change ÷ to × and flip
+Show all working (WAEC loves steps 😄)";
+
+    show("lesson");
+    startTimer();
+}
+
+// TIMER
+function startTimer() {
+    clearInterval(timerInterval);
+
+    timerInterval = setInterval(() => {
+        timeLeft--;
+
+        let m = Math.floor(timeLeft / 60);
+        let s = timeLeft % 60;
+
+        document.getElementById("timer").innerText =
+            "⏱ " + m + ":" + (s < 10 ? "0" : "") + s;
+
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            canExit = true;
+            alert("Lesson completed 🎉");
+            show("subjects");
+        }
+    }, 1000);
+}
+
+// EXIT CONTROL
+function tryExit() {
+    if (!canExit) {
+        alert("❌ You must finish the 1 hour lesson!");
+    } else {
+        show("subjects");
+    }
+}
+</script>
 ‎
 ‎</body>
 ‎</html>
