@@ -1,279 +1,390 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Study Hub 📚</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Study Hub 📚</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial;
-            background: #0f172a;
-            color: white;
-        }
+<style>
+body {
+    margin:0;
+    font-family: Arial;
+    background:#0f172a;
+    color:white;
+}
 
-        .screen {
-            display: none;
-            padding: 20px;
-            max-width: 900px;
-            margin: auto;
-        }
+.screen {
+    display:none;
+    padding:20px;
+    max-width:900px;
+    margin:auto;
+}
 
-        .active {
-            display: block;
-        }
+.active { display:block; }
 
-        h1 {
-            text-align: center;
-        }
+h1 { text-align:center; }
 
-        .card {
-            background: #1e293b;
-            padding: 18px;
-            margin: 12px 0;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 18px;
-        }
+.card {
+    background:#1e293b;
+    padding:16px;
+    margin:10px 0;
+    border-radius:12px;
+    cursor:pointer;
+    font-size:18px;
+}
 
-        .card:hover {
-            background: #334155;
-        }
+.card:hover { background:#334155; }
 
-        button {
-            width: 100%;
-            padding: 14px;
-            margin-top: 15px;
-            background: lime;
-            border: none;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-        }
+button {
+    width:100%;
+    padding:14px;
+    margin-top:15px;
+    background:lime;
+    border:none;
+    font-weight:bold;
+    border-radius:8px;
+    cursor:pointer;
+}
 
-        #timer {
-            text-align: center;
-            font-size: 22px;
-            margin-top: 20px;
-        }
-    </style>
+#timer {
+    text-align:center;
+    font-size:22px;
+}
+
+#lessonContent {
+    line-height:1.6;
+}
+</style>
 </head>
 
 <body>
 
-<!-- HOME -->
 <div id="home" class="screen active">
-    <h1>📚 Study Hub</h1>
-    <div class="card" onclick="enterGrade('10')">🔼 Grade 10</div>
-    <div class="card" onclick="enterGrade('11')">🔽 Grade 11</div>
+<h1>📚 Study Hub</h1>
+<div class="card" onclick="enterGrade('10')">🔼 Grade 10</div>
+<div class="card" onclick="enterGrade('11')">🔽 Grade 11</div>
 </div>
 
-<!-- TIMETABLE -->
 <div id="timetable" class="screen">
-    <h1 id="gradeTitle"></h1>
-    <p id="timetableText"></p>
-    <button onclick="goSubjects()">Continue</button>
+<h1 id="gradeTitle"></h1>
+<p id="timetableText"></p>
+<button onclick="goSubjects()">Continue</button>
 </div>
 
-<!-- SUBJECTS -->
 <div id="subjects" class="screen">
-    <h1 id="subjectTitle"></h1>
-    <div id="subjectList"></div>
+<h1 id="subjectTitle"></h1>
+<div id="subjectList"></div>
 </div>
 
-<!-- SCHEME -->
 <div id="scheme" class="screen">
-    <h1 id="schemeTitle"></h1>
-    <p id="schemeText"></p>
-    <button onclick="startLesson()">Continue</button>
+<h1 id="schemeTitle"></h1>
+<p id="schemeText"></p>
+<button onclick="startLesson()">Continue</button>
 </div>
 
-<!-- LESSON -->
 <div id="lesson" class="screen">
-    <h1 id="lessonTitle"></h1>
-    <p id="lessonContent"></p>
-    <h2 id="timer">⏱ 60:00</h2>
-    <button onclick="tryExit()">Exit</button>
+<h1 id="lessonTitle"></h1>
+<div id="lessonContent"></div>
+<h2 id="timer">⏱ 60:00</h2>
+<button onclick="showQuiz()">Go to Quiz</button>
+</div>
+
+<div id="quiz" class="screen">
+<h1>🧠 Quiz</h1>
+<p id="quizQuestion"></p>
+<input id="answer" style="width:100%;padding:10px;">
+<button onclick="checkAnswer()">Submit</button>
 </div>
 
 <script>
-let grade = "";
-let subject = "";
-let timeLeft = 3600;
-let timerInterval;
-let canExit = false;
+let grade="", subject="";
+let timeLeft=3600, timer;
 
-// SWITCH SCREEN
-function show(id) {
-    document.querySelectorAll(".screen").forEach(el => el.classList.remove("active"));
-    document.getElementById(id).classList.add("active");
-}
-
-// DATA (YOUR CONTENT CONTROL CENTER)
+// 📚 LONG STRUCTURED NOTES
 const data = {
-    "10": {
-        subjects: {
-            "Mathematics": {
-                scheme: "Algebra, Fractions, Indices, Linear Equations",
-                lesson: `
-<h3>🔢 Algebraic Fractions</h3>
-<p><b>Meaning:</b> Fractions with algebraic expressions.</p>
 
-<p><b>Rules:</b></p>
+"10":{
+subjects:{
+"Mathematics":{
+scheme:"Algebra & Linear Equations",
+lesson:`
+<h3>🔢 Algebra</h3>
+<p>Algebra is the branch of mathematics that uses letters and symbols to represent numbers and quantities in formulas and equations.</p>
+
+<p>In algebra, we deal with variables such as x, y, and z. These variables can represent unknown values.</p>
+
 <ul>
-<li>Denominator must not be zero</li>
-<li>Always factor before simplifying</li>
+<li>Example: x + 2 = 5</li>
+<li>Here x = 3</li>
 </ul>
 
-<p><b>Example:</b></p>
-<p>Simplify: (x² - 9)/(x - 3)</p>
-<p>Factor → (x-3)(x+3)/(x-3)</p>
-<p>Answer → x + 3 ✅</p>
+<p>Algebra helps us solve real-life problems such as calculating distances, costs, and unknown values.</p>
 
-<p><b>Tips:</b></p>
+<h3>📌 Linear Equations</h3>
+<p>A linear equation is an equation that forms a straight line when graphed.</p>
+
 <ul>
-<li>Use LCM for addition</li>
-<li>Flip when dividing</li>
+<li>Example: 2x + 4 = 10</li>
+<li>Step 1: Subtract 4 → 2x = 6</li>
+<li>Step 2: Divide by 2 → x = 3</li>
 </ul>
-`
-            },
-            "Biology": {
-                scheme: "Cells, Nutrition, Respiration",
-                lesson: `
+
+<p>Always isolate the variable when solving equations.</p>
+`,
+quiz:{q:"Solve 2x+4=10",a:"3"}
+},
+
+"Biology":{
+scheme:"Cell & Nutrition",
+lesson:`
 <h3>🧬 Cell Structure</h3>
-<p>The cell is the basic unit of life.</p>
+<p>The cell is the smallest unit of life. All living organisms are made up of cells.</p>
 
 <ul>
 <li>Nucleus → controls activities</li>
-<li>Cytoplasm → where reactions happen</li>
-<li>Cell membrane → controls entry</li>
+<li>Cytoplasm → where reactions occur</li>
+<li>Cell membrane → controls entry and exit</li>
 </ul>
-`
-            }
-        }
-    },
 
-    "11": {
-        subjects: {
-            "Physics": {
-                scheme: "Motion, Force, Energy",
-                lesson: `
+<p>Cells can be plant or animal cells, each with different structures.</p>
+
+<h3>🍎 Nutrition</h3>
+<p>Nutrition is how living things obtain and use food.</p>
+
+<ul>
+<li>Autotrophs → make their own food (plants)</li>
+<li>Heterotrophs → depend on others (animals)</li>
+</ul>
+`,
+quiz:{q:"Basic unit of life?",a:"cell"}
+},
+
+"Physics":{
+scheme:"Motion & Force",
+lesson:`
 <h3>⚡ Motion</h3>
-<p>Motion is change in position over time.</p>
+<p>Motion is the movement of an object from one place to another.</p>
 
-<p><b>Formula:</b></p>
 <p>Speed = Distance / Time</p>
 
-<p><b>Types:</b></p>
+<p>Example: If distance = 100m and time = 10s, speed = 10m/s</p>
+
+<h3>💪 Force</h3>
+<p>Force is a push or pull acting on an object.</p>
+
 <ul>
-<li>Uniform motion</li>
-<li>Accelerated motion</li>
+<li>Gravity pulls objects down</li>
+<li>Friction resists motion</li>
 </ul>
-`
-            },
-            "Chemistry": {
-                scheme: "Atoms, Bonding, Periodic Table",
-                lesson: `
-<h3>🧪 Atomic Structure</h3>
-<p>Atoms are the smallest units of matter.</p>
+`,
+quiz:{q:"Speed formula?",a:"distance/time"}
+},
+
+"Chemistry":{
+scheme:"Atoms & Elements",
+lesson:`
+<h3>🧪 Atoms</h3>
+<p>An atom is the smallest unit of matter.</p>
 
 <ul>
 <li>Protons → positive</li>
 <li>Electrons → negative</li>
 <li>Neutrons → neutral</li>
 </ul>
-`
-            }
-        }
-    }
+
+<h3>⚛️ Elements</h3>
+<p>Elements are pure substances made of one type of atom.</p>
+
+<p>Example: Oxygen, Hydrogen</p>
+`,
+quiz:{q:"Smallest unit?",a:"atom"}
+},
+
+"English":{
+scheme:"Grammar & Comprehension",
+lesson:`
+<h3>📖 Grammar</h3>
+<p>Grammar is the system of rules that governs language.</p>
+
+<p>It includes tenses, sentence structure, and punctuation.</p>
+
+<h3>📘 Comprehension</h3>
+<p>Comprehension is the ability to read and understand text.</p>
+
+<p>Always read carefully and answer questions based on the passage.</p>
+`,
+quiz:{q:"Study of language rules?",a:"grammar"}
+},
+
+"Citizenship":{
+scheme:"Rights & Duties",
+lesson:`
+<h3>🏛 Rights</h3>
+<p>Rights are freedoms given to citizens.</p>
+
+<h3>⚖ Duties</h3>
+<p>Duties are responsibilities like obeying laws and paying taxes.</p>
+`,
+quiz:{q:"Responsibilities called?",a:"duties"}
+}
+}
+},
+
+"11":{
+subjects:{
+"Mathematics":{
+scheme:"Quadratic & Trigonometry",
+lesson:`
+<h3>🔢 Quadratic Equations</h3>
+<p>ax² + bx + c = 0</p>
+
+<p>Used to solve complex problems.</p>
+
+<h3>📐 Trigonometry</h3>
+<p>Deals with angles and triangles.</p>
+`,
+quiz:{q:"Quadratic form?",a:"ax^2+bx+c=0"}
+},
+
+"Biology":{
+scheme:"Genetics & Evolution",
+lesson:`
+<h3>🧬 Genetics</h3>
+<p>Study of heredity.</p>
+
+<h3>🌱 Evolution</h3>
+<p>Change in organisms over time.</p>
+`,
+quiz:{q:"Study of heredity?",a:"genetics"}
+},
+
+"Physics":{
+scheme:"Electricity & Energy",
+lesson:`
+<h3>⚡ Electricity</h3>
+<p>Flow of electric current.</p>
+
+<h3>🔋 Energy</h3>
+<p>Ability to do work.</p>
+`,
+quiz:{q:"Ohm law?",a:"v=ir"}
+},
+
+"Chemistry":{
+scheme:"Acids & Organic",
+lesson:`
+<h3>🧪 Acids</h3>
+<p>pH less than 7</p>
+
+<h3>🧬 Organic Chemistry</h3>
+<p>Study of carbon compounds.</p>
+`,
+quiz:{q:"pH of acid?",a:"less than 7"}
+},
+
+"English":{
+scheme:"Essay & Literature",
+lesson:`
+<h3>📖 Essay Writing</h3>
+<p>Intro, body, conclusion.</p>
+
+<h3>📚 Literature</h3>
+<p>Study of stories and texts.</p>
+`,
+quiz:{q:"Parts of essay?",a:"intro body conclusion"}
+},
+
+"Heritage":{
+scheme:"Culture & History",
+lesson:`
+<h3>🌍 Culture</h3>
+<p>Way of life.</p>
+
+<h3>📜 History</h3>
+<p>Study of past events.</p>
+`,
+quiz:{q:"Study of past?",a:"history"}
+}
+}
+}
 };
 
-// SELECT GRADE
-function enterGrade(g) {
-    grade = g;
-
-    document.getElementById("gradeTitle").innerText = "Grade " + g;
-    document.getElementById("timetableText").innerText =
-        "Timetable for Grade " + g + " (edit this)";
-
-    show("timetable");
+// NAVIGATION
+function show(id){
+document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+document.getElementById(id).classList.add("active");
 }
 
-// GO SUBJECTS
-function goSubjects() {
-    let subjects = Object.keys(data[grade].subjects);
-
-    let container = document.getElementById("subjectList");
-    container.innerHTML = "";
-
-    document.getElementById("subjectTitle").innerText =
-        "Grade " + grade + " Subjects";
-
-    subjects.forEach(sub => {
-        let div = document.createElement("div");
-        div.className = "card";
-        div.innerText = sub;
-        div.onclick = () => selectSubject(sub);
-        container.appendChild(div);
-    });
-
-    show("subjects");
+function enterGrade(g){
+grade=g;
+document.getElementById("gradeTitle").innerText="Grade "+g;
+document.getElementById("timetableText").innerText="Timetable for Grade "+g;
+show("timetable");
 }
 
-// SELECT SUBJECT
-function selectSubject(sub) {
-    subject = sub;
+function goSubjects(){
+let subs=Object.keys(data[grade].subjects);
+let box=document.getElementById("subjectList");
+box.innerHTML="";
 
-    document.getElementById("schemeTitle").innerText = sub;
-    document.getElementById("schemeText").innerText =
-        data[grade].subjects[sub].scheme;
+document.getElementById("subjectTitle").innerText="Grade "+grade;
 
-    show("scheme");
+subs.forEach(s=>{
+let d=document.createElement("div");
+d.className="card";
+d.innerText=s;
+d.onclick=()=>selectSubject(s);
+box.appendChild(d);
+});
+
+show("subjects");
 }
 
-// START LESSON
-function startLesson() {
-    timeLeft = 3600;
-    canExit = false;
-
-    document.getElementById("lessonTitle").innerText = subject;
-    document.getElementById("lessonContent").innerHTML =
-        data[grade].subjects[subject].lesson;
-
-    show("lesson");
-    startTimer();
+function selectSubject(s){
+subject=s;
+document.getElementById("schemeTitle").innerText=s;
+document.getElementById("schemeText").innerText=data[grade].subjects[s].scheme;
+show("scheme");
 }
 
-// TIMER
-function startTimer() {
-    clearInterval(timerInterval);
-
-    timerInterval = setInterval(() => {
-        timeLeft--;
-
-        let m = Math.floor(timeLeft / 60);
-        let s = timeLeft % 60;
-
-        document.getElementById("timer").innerText =
-            "⏱ " + m + ":" + (s < 10 ? "0" : "") + s;
-
-        if (timeLeft <= 0) {
-            clearInterval(timerInterval);
-            canExit = true;
-            alert("Lesson complete 🎉");
-            show("subjects");
-        }
-    }, 1000);
+function startLesson(){
+timeLeft=3600;
+document.getElementById("lessonTitle").innerText=subject;
+document.getElementById("lessonContent").innerHTML=data[grade].subjects[subject].lesson;
+show("lesson");
+startTimer();
 }
 
-// EXIT CONTROL
-function tryExit() {
-    if (!canExit) {
-        alert("❌ Finish the 1 hour lesson!");
-    } else {
-        show("subjects");
-    }
+function startTimer(){
+clearInterval(timer);
+timer=setInterval(()=>{
+timeLeft--;
+let m=Math.floor(timeLeft/60);
+let s=timeLeft%60;
+document.getElementById("timer").innerText="⏱ "+m+":"+(s<10?"0":"")+s;
+
+if(timeLeft<=0){
+clearInterval(timer);
+alert("Lesson complete 🎉");
+show("subjects");
+}
+},1000);
+}
+
+function showQuiz(){
+show("quiz");
+document.getElementById("quizQuestion").innerText=data[grade].subjects[subject].quiz.q;
+}
+
+function checkAnswer(){
+let ans=document.getElementById("answer").value.toLowerCase();
+let correct=data[grade].subjects[subject].quiz.a.toLowerCase();
+
+if(ans==correct){
+alert("Correct 🎉");
+show("subjects");
+}else{
+alert("Wrong 😭");
+}
 }
 </script>
 
